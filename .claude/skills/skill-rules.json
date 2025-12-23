@@ -1,0 +1,797 @@
+{
+    "version": "1.0",
+    "description": "Skill activation triggers for Claude Code. Controls when skills automatically suggest or block actions.",
+    "skills": {
+                "implement_plan": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Implement technical plans using agent orchestration (compaction-resistant)",
+            "promptTriggers": {
+                "keywords": [
+                    "implement plan",
+                    "execute plan",
+                    "follow plan",
+                    "implement phase",
+                    "run the plan",
+                    "start phase",
+                    "continue phase",
+                    "orchestrate",
+                    "agent orchestration",
+                    "PLAN-"
+                ],
+                "intentPatterns": [
+                    "(implement|execute|follow|run).*?plan",
+                    "(start|continue|resume).*?phase",
+                    "thoughts/shared/plans",
+                    "PLAN-.*\\.md",
+                    "(use|with).*?agent.*?orchestration"
+                ]
+            }
+        },
+        "validate_plan": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "POST-implementation: Verify code matches plan, check success criteria",
+            "promptTriggers": {
+                "keywords": [
+                    "verify implementation",
+                    "check implementation",
+                    "validation report",
+                    "did it work",
+                    "verify code",
+                    "check code matches",
+                    "post implementation"
+                ],
+                "intentPatterns": [
+                    "(verify|check).*?implementation",
+                    "(is|was).*?implementation.*?(correct|complete|done)",
+                    "check.*?(success|criteria)",
+                    "(did|does).*?(work|pass)"
+                ]
+            }
+        },
+        "commit": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Create git commits with user approval and no Claude attribution",
+            "promptTriggers": {
+                "keywords": [
+                    "commit",
+                    "git commit",
+                    "save changes",
+                    "commit changes",
+                    "make commit",
+                    "push",
+                    "push to github",
+                    "push changes"
+                ],
+                "intentPatterns": [
+                    "(commit|save|push).*?(changes|work|code)",
+                    "(git|version control).*?(commit|push)",
+                    "(create|make).*?commit",
+                    "push.*?(to|github|remote|origin)"
+                ]
+            }
+        },
+        "describe_pr": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Generate comprehensive PR descriptions following repository templates",
+            "promptTriggers": {
+                "keywords": [
+                    "describe pr",
+                    "pr description",
+                    "pull request description",
+                    "write pr",
+                    "create pr",
+                    "pr body"
+                ],
+                "intentPatterns": [
+                    "(create|write|generate|describe).*?(pr|pull request)",
+                    "(pr|pull request).*?(description|body)",
+                    "describe.*?(changes|pr)"
+                ]
+            }
+        },
+        "debug": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "low",
+            "description": "Simple debugging (use debug-agent for thorough investigation)",
+            "promptTriggers": {
+                "keywords": [
+                    "quick debug",
+                    "simple fix"
+                ],
+                "intentPatterns": []
+            }
+        },
+        "research": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "low",
+            "description": "Simple research (use research-agent for comprehensive research)",
+            "promptTriggers": {
+                "keywords": [
+                    "quick lookup",
+                    "simple question"
+                ],
+                "intentPatterns": []
+            }
+        },
+        "create_handoff": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Create handoff document for transferring work to a NEW session",
+            "promptTriggers": {
+                "keywords": [
+                    "create handoff",
+                    "make handoff",
+                    "write handoff",
+                    "handoff document",
+                    "hand off",
+                    "done for today",
+                    "end session",
+                    "switching tasks",
+                    "pick this up later",
+                    "wrap up"
+                ],
+                "intentPatterns": [
+                    "(create|make|write).*?handoff",
+                    "(hand|transfer).*?(off|over)",
+                    "(done|finished|stopping).*?(today|now|session)",
+                    "(end|close|wrap).*?session",
+                    "(pick|continue).*?later"
+                ]
+            }
+        },
+        "resume_handoff": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Resume work from handoff document with context analysis",
+            "promptTriggers": {
+                "keywords": [
+                    "resume handoff",
+                    "continue handoff",
+                    "pick up handoff",
+                    "resume work",
+                    "continue work",
+                    "pick up where",
+                    "new session"
+                ],
+                "intentPatterns": [
+                    "(resume|continue|pick up).*?(handoff|work|session)",
+                    "(new|fresh|another).*?session",
+                    "where.*?(left off|stopped)"
+                ]
+            }
+        },
+        "continuity_ledger": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Create/update continuity ledger for state preservation across compactions (within session)",
+            "promptTriggers": {
+                "keywords": [
+                    "continuity",
+                    "ledger",
+                    "save state",
+                    "update state",
+                    "before compact",
+                    "high context",
+                    "context usage",
+                    "running low",
+                    "low on context",
+                    "context warning",
+                    "about to compact"
+                ],
+                "intentPatterns": [
+                    "(save|preserve|update).*?(state|ledger)",
+                    "(before|prepare|about to).*?compact",
+                    "(context|running).*?(low|high|limit|warning)",
+                    "(continuity|ledger).*?(create|update)",
+                    "(low|running out).*?context"
+                ]
+            }
+        },
+        "skill-developer": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Meta-skill for creating and managing Claude Code skills",
+            "promptTriggers": {
+                "keywords": [
+                    "skill system",
+                    "create skill",
+                    "add skill",
+                    "skill triggers",
+                    "skill rules",
+                    "hook system",
+                    "skill development",
+                    "skill-rules.json"
+                ],
+                "intentPatterns": [
+                    "(how do|how does|explain).*?skill",
+                    "(create|add|modify|build).*?skill",
+                    "skill.*?(work|trigger|activate|system)"
+                ]
+            }
+        },
+        "github-search": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Search GitHub code, repos, issues, PRs via MCP code execution",
+            "promptTriggers": {
+                "keywords": [
+                    "github",
+                    "search github",
+                    "find repo",
+                    "search code",
+                    "github issue",
+                    "pull request",
+                    "PR",
+                    "repository"
+                ],
+                "intentPatterns": [
+                    "(search|find|look.*?up).*?(github|repo|code|issue|PR)",
+                    "(github|repo).*?(search|find)",
+                    "(list|show|get).*?(issues|PRs|pull requests)"
+                ]
+            }
+        },
+        "firecrawl-scrape": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Scrape web pages and search via Firecrawl MCP",
+            "promptTriggers": {
+                "keywords": [
+                    "scrape",
+                    "web scrape",
+                    "fetch url",
+                    "get page",
+                    "crawl",
+                    "extract from url",
+                    "firecrawl"
+                ],
+                "intentPatterns": [
+                    "(scrape|fetch|get|crawl).*?(url|page|website|site)",
+                    "(extract|get).*?(content|data).*?from.*?(url|page|website)"
+                ]
+            }
+        },
+        "nia-docs": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Search library documentation via Nia API",
+            "promptTriggers": {
+                "keywords": [
+                    "documentation",
+                    "docs",
+                    "library docs",
+                    "API reference",
+                    "how to use",
+                    "package docs",
+                    "nia"
+                ],
+                "intentPatterns": [
+                    "(get|find|show|look.*?up).*?(docs|documentation)",
+                    "(how|what).*?(library|package|module).*?(work|use)",
+                    "(docs|documentation).*?for.*?(library|package)"
+                ]
+            }
+        },
+        "ast-grep-find": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "STRUCTURAL code search - use for semantic patterns (find function calls, class usages, refactoring). Understands code structure, not just text.",
+            "promptTriggers": {
+                "keywords": [
+                    "ast",
+                    "ast-grep",
+                    "code pattern",
+                    "find pattern",
+                    "refactor",
+                    "codemod",
+                    "find all calls",
+                    "find all usages",
+                    "find all functions",
+                    "replace all"
+                ],
+                "intentPatterns": [
+                    "(find|search).*?(pattern|all.*?calls|all.*?uses|all.*?functions)",
+                    "(refactor|replace|rename).*?(all|everywhere)",
+                    "ast.*?(search|find|pattern)",
+                    "find.*?(calls|usages|implementations).*?of"
+                ]
+            }
+        },
+        "repoprompt": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "Explore codebase via RepoPrompt CLI",
+            "promptTriggers": {
+                "keywords": [
+                    "repoprompt",
+                    "codebase structure",
+                    "file tree",
+                    "code context",
+                    "code structure",
+                    "signatures"
+                ],
+                "intentPatterns": [
+                    "(explore|show|get).*?(codebase|structure|tree)",
+                    "(what|how).*?(codebase|project).*?(structure|organized)"
+                ]
+            }
+        },
+        "recall-reasoning": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "Search past reasoning for relevant decisions and approaches",
+            "promptTriggers": {
+                "keywords": [
+                    "recall",
+                    "past reasoning",
+                    "what was tried",
+                    "previous attempts",
+                    "search reasoning",
+                    "past decisions",
+                    "similar problem",
+                    "tried before",
+                    "done before"
+                ],
+                "intentPatterns": [
+                    "(recall|search|find).*?(reasoning|attempts|decisions)",
+                    "(what|how).*?(tried|done).*?before",
+                    "(similar|past).*?(problem|issue|approach)",
+                    "(previous|past).*?(attempts|work|reasoning)"
+                ]
+            }
+        },
+        "morph-search": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "TEXT search (20x faster than grep) - DEFAULT for finding strings in code. Use for keywords, error messages, TODOs. Falls back to Grep if no API key.",
+            "promptTriggers": {
+                "keywords": [
+                    "warpgrep",
+                    "morph",
+                    "fast search",
+                    "codebase search",
+                    "search code",
+                    "grep",
+                    "find in code",
+                    "search for",
+                    "find text",
+                    "find string"
+                ],
+                "intentPatterns": [
+                    "(search|find|grep).*?(code|codebase|files|text|string)",
+                    "(fast|quick).*?search",
+                    "warpgrep.*?(search|find)",
+                    "find.*?(files|code).*?(containing|mentioning|with)"
+                ]
+            }
+        },
+        "perplexity-search": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "AI-powered web search, research, and reasoning via Perplexity",
+            "promptTriggers": {
+                "keywords": [
+                    "perplexity",
+                    "web search",
+                    "search the web",
+                    "look up",
+                    "current information",
+                    "latest",
+                    "research topic"
+                ],
+                "intentPatterns": [
+                    "(search|look up|find).*?(web|online|internet)",
+                    "(what is|how does).*?(latest|current|new)",
+                    "perplexity.*?(search|ask|research)",
+                    "(research|investigate).*?(topic|question)"
+                ]
+            }
+        },
+        "qlty-check": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Code quality checks, auto-fix, formatting, metrics via qlty CLI (70+ linters, 40+ languages)",
+            "promptTriggers": {
+                "keywords": [
+                    "qlty",
+                    "code quality",
+                    "lint",
+                    "linting",
+                    "code check",
+                    "quality check",
+                    "auto-fix",
+                    "code metrics",
+                    "complexity",
+                    "code smells",
+                    "format code",
+                    "check code"
+                ],
+                "intentPatterns": [
+                    "(check|lint|analyze).*?(code|quality)",
+                    "(code|quality).*?(check|lint|issues)",
+                    "(auto|fix).*?(lint|format|issues)",
+                    "(code|complexity).*?metrics",
+                    "(find|detect).*?(smells|issues|problems)",
+                    "format.*?(code|files)"
+                ]
+            }
+        },
+        "test-driven-development": {
+            "type": "process",
+            "enforcement": "warn",
+            "priority": "critical",
+            "description": "TDD workflow: Write failing test FIRST, then minimal code to pass. No production code without a failing test.",
+            "promptTriggers": {
+                "keywords": [
+                    "implement",
+                    "add feature",
+                    "new feature",
+                    "fix bug",
+                    "bugfix",
+                    "build",
+                    "develop",
+                    "create function",
+                    "add method",
+                    "write code",
+                    "coding",
+                    "refactor",
+                    "change behavior",
+                    "modify behavior"
+                ],
+                "intentPatterns": [
+                    "(implement|add|create|build|develop).*?(feature|function|method|class|component)",
+                    "(fix|resolve|address).*?(bug|issue|error|problem)",
+                    "(write|add).*?(code|implementation)",
+                    "(change|modify|update).*?(behavior|functionality)",
+                    "(refactor|rewrite).*?(code|function|class)"
+                ]
+            },
+            "reminder": "Remember: Write the failing test FIRST. No production code without a failing test."
+        }
+    },
+    "agents": {
+        "rp-explorer": {
+            "type": "exploration",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Token-efficient codebase exploration using RepoPrompt - USE FIRST for brownfield projects",
+            "promptTriggers": {
+                "keywords": [
+                    "repoprompt",
+                    "repo prompt",
+                    "rp-explorer",
+                    "context builder",
+                    "codemap",
+                    "brownfield",
+                    "existing codebase",
+                    "existing project",
+                    "legacy code",
+                    "legacy project",
+                    "understand the codebase",
+                    "current implementation",
+                    "explore codebase",
+                    "understand how",
+                    "find all usages",
+                    "where is",
+                    "how does",
+                    "search codebase",
+                    "code structure",
+                    "find files",
+                    "what calls",
+                    "who uses",
+                    "trace through",
+                    "codebase map"
+                ],
+                "intentPatterns": [
+                    "brownfield.*?(plan|implement|feature)",
+                    "(existing|legacy).*?(codebase|project|code)",
+                    "(explore|understand).*?(codebase|code|system)",
+                    "(find|search|locate).*?(files|usages|references)",
+                    "how.*?(does|is).*?(implemented|work)",
+                    "(what|where|which).*?(calls|uses|imports)",
+                    "(before|first).*?(plan|implement).*?(understand|explore)"
+                ]
+            }
+        },
+        "research-agent": {
+            "type": "research",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Comprehensive research using MCP tools (nia, perplexity, repoprompt, firecrawl)",
+            "promptTriggers": {
+                "keywords": [
+                    "research",
+                    "investigate",
+                    "find out",
+                    "learn about",
+                    "gather information",
+                    "what are best practices",
+                    "how should we",
+                    "what's the best way",
+                    "how does",
+                    "where is",
+                    "understand",
+                    "explain",
+                    "document",
+                    "codebase",
+                    "architecture"
+                ],
+                "intentPatterns": [
+                    "(research|investigate|explore).*?(topic|approach|options)",
+                    "(find out|learn).*?(about|how)",
+                    "(what|how).*?(best practices|recommended|should)",
+                    "(gather|collect).*?(information|data|knowledge)",
+                    "(how|where).*?(does|is|works|implemented)",
+                    "(understand|explain|document).*?(codebase|code|system|architecture)"
+                ]
+            }
+        },
+        "plan-agent": {
+            "type": "planning",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Create implementation plans - for brownfield run rp-explorer first",
+            "promptTriggers": {
+                "keywords": [
+                    "create plan",
+                    "make plan",
+                    "plan for",
+                    "design",
+                    "architect",
+                    "implementation plan",
+                    "how to implement",
+                    "planning",
+                    "plan feature",
+                    "plan implementation",
+                    "new feature",
+                    "build feature",
+                    "add feature",
+                    "phased approach",
+                    "greenfield",
+                    "new project",
+                    "start fresh",
+                    "from scratch"
+                ],
+                "intentPatterns": [
+                    "(create|make|write|draft).*?plan",
+                    "(plan|design).*?(implementation|feature|system)",
+                    "how.*?(should|would|could).*?implement",
+                    "(architect|design).*?(system|feature|solution)",
+                    "(start|begin).*?planning",
+                    "greenfield.*?(plan|project|feature)",
+                    "(new|fresh|scratch).*?project"
+                ]
+            }
+        },
+        "validate-agent": {
+            "type": "validation",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "PRE-implementation: Validate plan tech choices against current best practices",
+            "promptTriggers": {
+                "keywords": [
+                    "validate plan",
+                    "validate the plan",
+                    "check plan",
+                    "review plan",
+                    "validate tech",
+                    "validate choices",
+                    "before implementing",
+                    "ready to implement",
+                    "plan looks good"
+                ],
+                "intentPatterns": [
+                    "(validate|check|review).*?plan",
+                    "(validate|check).*?(tech|choices|approach)",
+                    "(before|ready).*?implement",
+                    "(is|does).*?plan.*?(good|ready|valid)",
+                    "plan.*?(ready|validated|approved)"
+                ]
+            }
+        },
+        "debug-agent": {
+            "type": "debugging",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Investigate issues using codebase exploration, logs, and code search",
+            "promptTriggers": {
+                "keywords": [
+                    "debug",
+                    "debugging",
+                    "investigate",
+                    "investigate issue",
+                    "find bug",
+                    "why is it",
+                    "what's wrong",
+                    "not working",
+                    "error",
+                    "broken",
+                    "failing",
+                    "issue",
+                    "problem",
+                    "bug",
+                    "logs",
+                    "check logs"
+                ],
+                "intentPatterns": [
+                    "(debug|investigate|diagnose).*?(issue|bug|error|problem)",
+                    "(why|what).*?(not working|broken|failing|wrong)",
+                    "(find|locate|trace).*?(bug|issue|error|cause)",
+                    "(what|why).*?(causing|happened)",
+                    "(check|look at|examine).*?(logs|database|state)",
+                    "(something|it).*?(broke|failed|crashed)"
+                ]
+            }
+        },
+        "codebase-analyzer": {
+            "type": "exploration",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Deep dive on specific components, trace data flow, understand implementation details",
+            "promptTriggers": {
+                "keywords": [
+                    "analyze",
+                    "how does",
+                    "how do",
+                    "trace",
+                    "data flow",
+                    "explain how",
+                    "deep dive",
+                    "understand",
+                    "walk through",
+                    "step through"
+                ],
+                "intentPatterns": [
+                    "(analyze|explain|understand).*?(component|module|system|flow)",
+                    "how.*?(does|do).*?(work|function|handle)",
+                    "(trace|follow).*?(data|flow|request|response)",
+                    "(deep dive|dig into).*?(code|implementation)",
+                    "(walk|step).*?through.*?(code|logic|flow)"
+                ]
+            }
+        },
+        "codebase-locator": {
+            "type": "exploration",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Find files, directories, and components related to a feature (super Grep/Glob)",
+            "promptTriggers": {
+                "keywords": [
+                    "find files",
+                    "locate",
+                    "where are",
+                    "which files",
+                    "what files",
+                    "find all files",
+                    "related files",
+                    "files for",
+                    "files that handle"
+                ],
+                "intentPatterns": [
+                    "(find|locate|where).*?(files|components|modules)",
+                    "(which|what).*?files.*?(handle|contain|have)",
+                    "files.*?(related|involved|for).*?(feature|task)",
+                    "(show|list).*?(all|files).*?(for|related)"
+                ]
+            }
+        },
+        "codebase-pattern-finder": {
+            "type": "exploration",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "Find similar implementations, usage examples, and existing patterns to model after",
+            "promptTriggers": {
+                "keywords": [
+                    "find examples",
+                    "show examples",
+                    "similar",
+                    "pattern",
+                    "how do we",
+                    "how is",
+                    "usage",
+                    "existing",
+                    "elsewhere",
+                    "other places",
+                    "convention"
+                ],
+                "intentPatterns": [
+                    "(find|show|get).*?(examples|patterns|similar)",
+                    "how.*?(do we|is it).*?(done|handled|implemented).*?(here|elsewhere)",
+                    "(similar|existing).*?(implementation|pattern|code)",
+                    "(what|where).*?(convention|pattern).*?(use|follow)",
+                    "(model|base).*?(after|on).*?(existing|example)"
+                ]
+            }
+        },
+        "explore": {
+            "type": "exploration",
+            "enforcement": "suggest",
+            "priority": "medium",
+            "description": "General codebase exploration with configurable thoroughness (quick/medium/thorough)",
+            "promptTriggers": {
+                "keywords": [
+                    "explore",
+                    "look around",
+                    "get familiar",
+                    "overview",
+                    "quick look",
+                    "scan",
+                    "browse"
+                ],
+                "intentPatterns": [
+                    "(explore|browse|scan).*?(codebase|project|code)",
+                    "(get|become).*?(familiar|oriented)",
+                    "(quick|general).*?(look|overview|scan)",
+                    "(what|how).*?(codebase|project).*?(look|organized)"
+                ]
+            }
+        },
+        "repo-research-analyst": {
+            "type": "research",
+            "enforcement": "suggest",
+            "priority": "critical",
+            "description": "Analyze repository structure, patterns, conventions, and documentation",
+            "promptTriggers": {
+                "keywords": [
+                    "research repo",
+                    "research this repo",
+                    "analyze repo",
+                    "analyze this repo",
+                    "understand repo",
+                    "repo structure",
+                    "repo conventions",
+                    "repo patterns",
+                    "clone and analyze",
+                    "new repo",
+                    "new repository",
+                    "contribution guidelines",
+                    "how does this project",
+                    "project conventions"
+                ],
+                "intentPatterns": [
+                    "(research|analyze|understand).*?(repo|repository|project)",
+                    "(clone|fork).*?(and|then).*?(research|analyze)",
+                    "(what|how).*?(conventions|patterns|structure).*?(repo|project)",
+                    "(before|want to).*?contribut",
+                    "(understand|learn).*?(codebase|project)"
+                ]
+            }
+        }
+    },
+    "notes": {
+        "enforcement_types": {
+            "suggest": "Skill suggestion appears but doesn't block execution",
+            "block": "Requires skill to be used before proceeding (guardrail)",
+            "warn": "Shows warning but allows proceeding"
+        },
+        "priority_levels": {
+            "critical": "Highest - Always trigger when matched",
+            "high": "Important - Trigger for most matches",
+            "medium": "Moderate - Trigger for clear matches",
+            "low": "Optional - Trigger only for explicit matches"
+        }
+    }
+}
