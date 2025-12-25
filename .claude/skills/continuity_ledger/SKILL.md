@@ -29,11 +29,12 @@ Maintain a ledger file that survives `/clear` for long-running sessions. Unlike 
 
 Check if a ledger already exists:
 ```bash
-ls CONTINUITY_CLAUDE-*.md 2>/dev/null
+ls thoughts/ledgers/CONTINUITY_CLAUDE-*.md 2>/dev/null
 ```
 
 - **If exists**: Update the existing ledger
-- **If not**: Create new file: `CONTINUITY_CLAUDE-<session-name>.md`
+- **If not**: Create new file: `thoughts/ledgers/CONTINUITY_CLAUDE-<session-name>.md`
+  - First ensure directory exists: `mkdir -p thoughts/ledgers`
   - Use kebab-case for session name (e.g., `auth-refactor`, `api-migration`)
 
 ### 2. Create/Update Ledger
@@ -102,7 +103,7 @@ When resuming after `/clear`:
 After creating/updating the ledger, respond:
 
 ```
-Continuity ledger updated: CONTINUITY_CLAUDE-<name>.md
+Continuity ledger updated: thoughts/ledgers/CONTINUITY_CLAUDE-<name>.md
 
 Current state:
 - Done: <summary>

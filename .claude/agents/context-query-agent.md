@@ -14,7 +14,7 @@ Given a question about past work, search across:
 
 Use Bash to run:
 ```bash
-uv run python scripts/context_graph_query.py "<query>" --json
+uv run python scripts/artifact_query.py "<query>" --json
 ```
 
 ## Process
@@ -25,7 +25,7 @@ uv run python scripts/context_graph_query.py "<query>" --json
 4. Synthesize results into concise context
 5. Save the query for compound learning:
    ```bash
-   uv run python scripts/context_graph_query.py "<query>" --save
+   uv run python scripts/artifact_query.py "<query>" --save
    ```
 
 ## Output Format

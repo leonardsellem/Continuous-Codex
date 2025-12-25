@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-USAGE: context_graph_mark.py --handoff ID --outcome OUTCOME [--notes NOTES] [--db PATH]
+USAGE: artifact_mark.py --handoff ID --outcome OUTCOME [--notes NOTES] [--db PATH]
 
 Mark a handoff with user outcome in the Context Graph database.
 
@@ -9,13 +9,13 @@ user verification. Used for improving future session recommendations.
 
 Examples:
     # Mark a handoff as succeeded
-    uv run python scripts/context_graph_mark.py --handoff abc123 --outcome SUCCEEDED
+    uv run python scripts/artifact_mark.py --handoff abc123 --outcome SUCCEEDED
 
     # Mark with additional notes
-    uv run python scripts/context_graph_mark.py --handoff abc123 --outcome PARTIAL_PLUS --notes "Almost done, one test failing"
+    uv run python scripts/artifact_mark.py --handoff abc123 --outcome PARTIAL_PLUS --notes "Almost done, one test failing"
 
     # List all handoffs to find IDs
-    sqlite3 .claude/cache/context-graph/context.db "SELECT id, session_name, task_number, task_summary FROM handoffs ORDER BY indexed_at DESC LIMIT 10"
+    sqlite3 .claude/cache/artifact-index/context.db "SELECT id, session_name, task_number, task_summary FROM handoffs ORDER BY indexed_at DESC LIMIT 10"
 """
 
 import argparse
@@ -28,7 +28,7 @@ def get_db_path(custom_path: Optional[str] = None) -> Path:
     """Get database path."""
     if custom_path:
         return Path(custom_path)
-    return Path(".claude/cache/context-graph/context.db")
+    return Path(".claude/cache/artifact-index/context.db")
 
 
 def main():
@@ -44,7 +44,7 @@ Examples:
   %(prog)s --handoff abc123 --outcome PARTIAL_PLUS --notes "One test failing"
 
   # Find handoff IDs
-  sqlite3 .claude/cache/context-graph/context.db \\
+  sqlite3 .claude/cache/artifact-index/context.db \\
     "SELECT id, session_name, task_number, task_summary FROM handoffs \\
      ORDER BY indexed_at DESC LIMIT 10"
 """
@@ -65,7 +65,7 @@ Examples:
 
     if not db_path.exists():
         print(f"Error: Database not found: {db_path}")
-        print("Run: uv run python scripts/context_graph_index.py --all")
+        print("Run: uv run python scripts/artifact_index.py --all")
         return 1
 
     conn = sqlite3.connect(db_path)

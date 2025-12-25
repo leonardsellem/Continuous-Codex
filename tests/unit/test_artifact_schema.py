@@ -16,7 +16,7 @@ from pathlib import Path
 import pytest
 
 
-SCHEMA_PATH = Path(__file__).parent.parent.parent / "scripts" / "context_graph_schema.sql"
+SCHEMA_PATH = Path(__file__).parent.parent.parent / "scripts" / "artifact_schema.sql"
 
 # Expected tables from the schema
 EXPECTED_TABLES = {"handoffs", "plans", "continuity", "queries"}
@@ -35,7 +35,7 @@ class TestSchemaFileExists:
     """Test that the schema file exists and is readable."""
 
     def test_schema_file_exists(self):
-        """Schema file should exist at scripts/context_graph_schema.sql."""
+        """Schema file should exist at scripts/artifact_schema.sql."""
         assert SCHEMA_PATH.exists(), f"Schema file not found at {SCHEMA_PATH}"
 
     def test_schema_file_is_not_empty(self):

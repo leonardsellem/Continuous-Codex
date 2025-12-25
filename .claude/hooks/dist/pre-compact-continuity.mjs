@@ -210,7 +210,8 @@ if (isMainModule) {
 async function main() {
   const input = JSON.parse(await readStdin());
   const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-  const ledgerFiles = fs2.readdirSync(projectDir).filter((f) => f.startsWith("CONTINUITY_CLAUDE-") && f.endsWith(".md"));
+  const ledgerDir = path.join(projectDir, "thoughts", "ledgers");
+  const ledgerFiles = fs2.readdirSync(ledgerDir).filter((f) => f.startsWith("CONTINUITY_CLAUDE-") && f.endsWith(".md"));
   if (ledgerFiles.length === 0) {
     const output = {
       result: "continue",
@@ -220,11 +221,11 @@ async function main() {
     return;
   }
   const mostRecent = ledgerFiles.sort((a, b) => {
-    const statA = fs2.statSync(path.join(projectDir, a));
-    const statB = fs2.statSync(path.join(projectDir, b));
+    const statA = fs2.statSync(path.join(ledgerDir, a));
+    const statB = fs2.statSync(path.join(ledgerDir, b));
     return statB.mtime.getTime() - statA.mtime.getTime();
   })[0];
-  const ledgerPath = path.join(projectDir, mostRecent);
+  const ledgerPath = path.join(ledgerDir, mostRecent);
   if (input.trigger === "auto") {
     const sessionName = mostRecent.replace("CONTINUITY_CLAUDE-", "").replace(".md", "");
     let handoffFile = "";

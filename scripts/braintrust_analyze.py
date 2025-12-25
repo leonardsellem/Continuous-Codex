@@ -149,7 +149,7 @@ def get_hierarchical_context(root_span_id: str) -> dict:
     import json as json_mod
 
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", os.getcwd())
-    query_script = Path(project_dir) / "scripts" / "context_graph_query.py"
+    query_script = Path(project_dir) / "scripts" / "artifact_query.py"
 
     if not query_script.exists():
         return {"handoff": None, "ledger": None}
@@ -895,7 +895,7 @@ async def judge_plan_with_context(plan_content: str, db_path: str = None) -> dic
     import sqlite3
     scripts_dir = Path(__file__).parent
     sys.path.insert(0, str(scripts_dir))
-    from context_graph_query import search_handoffs, get_db_path
+    from artifact_query import search_handoffs, get_db_path
 
     db = db_path or get_db_path()
     if not Path(db).exists():
@@ -1389,7 +1389,7 @@ def main():
             sys.exit(1)
 
         plan_content = plan_file.read_text()
-        db_path = Path(project_dir) / ".claude" / "cache" / "context-graph" / "context.db"
+        db_path = Path(project_dir) / ".claude" / "cache" / "artifact-index" / "context.db"
         result = asyncio.run(judge_plan_with_context(plan_content, str(db_path)))
 
         # Print results

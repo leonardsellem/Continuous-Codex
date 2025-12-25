@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
 """
-USAGE: context_graph_index.py [--handoffs] [--plans] [--continuity] [--all] [--file PATH] [--db PATH]
+USAGE: artifact_index.py [--handoffs] [--plans] [--continuity] [--all] [--file PATH] [--db PATH]
 
 Index handoffs, plans, and continuity ledgers into the Context Graph database.
 
 Examples:
     # Index all handoffs
-    uv run python scripts/context_graph_index.py --handoffs
+    uv run python scripts/artifact_index.py --handoffs
 
     # Index everything
-    uv run python scripts/context_graph_index.py --all
+    uv run python scripts/artifact_index.py --all
 
     # Index a single handoff file (fast, for hooks)
-    uv run python scripts/context_graph_index.py --file thoughts/shared/handoffs/session/task-01.md
+    uv run python scripts/artifact_index.py --file thoughts/shared/handoffs/session/task-01.md
 
     # Use custom database path
-    uv run python scripts/context_graph_index.py --all --db /path/to/context.db
+    uv run python scripts/artifact_index.py --all --db /path/to/context.db
 """
 
 import argparse
@@ -34,7 +34,7 @@ def get_db_path(custom_path: Optional[str] = None) -> Path:
     if custom_path:
         path = Path(custom_path)
     else:
-        path = Path(".claude/cache/context-graph/context.db")
+        path = Path(".claude/cache/artifact-index/context.db")
     path.parent.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -42,7 +42,7 @@ def get_db_path(custom_path: Optional[str] = None) -> Path:
 def init_db(db_path: Path) -> sqlite3.Connection:
     """Initialize database with schema."""
     conn = sqlite3.connect(db_path)
-    schema_path = Path(__file__).parent / "context_graph_schema.sql"
+    schema_path = Path(__file__).parent / "artifact_schema.sql"
     if schema_path.exists():
         conn.executescript(schema_path.read_text())
     return conn

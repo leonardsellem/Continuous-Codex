@@ -13,7 +13,7 @@ Use the following information to understand how to create your document:
 
 **First, determine the session name from the active ledger:**
 ```bash
-ls CONTINUITY_CLAUDE-*.md 2>/dev/null | head -1 | sed 's/CONTINUITY_CLAUDE-\(.*\)\.md/\1/'
+ls thoughts/ledgers/CONTINUITY_CLAUDE-*.md 2>/dev/null | head -1 | sed 's/.*CONTINUITY_CLAUDE-\(.*\)\.md/\1/'
 ```
 
 This returns the active work stream name (e.g., `open-source-release`). Use this as the handoff folder name.
@@ -151,12 +151,12 @@ Options:
 
 Based on the user's response, run:
 ```bash
-uv run python scripts/context_graph_mark.py --handoff <handoff_id> --outcome <OUTCOME>
+uv run python scripts/artifact_mark.py --handoff <handoff_id> --outcome <OUTCOME>
 ```
 
 To get the handoff_id, query the database:
 ```bash
-sqlite3 .claude/cache/context-graph/context.db "SELECT id FROM handoffs ORDER BY indexed_at DESC LIMIT 1"
+sqlite3 .claude/cache/artifact-index/context.db "SELECT id FROM handoffs ORDER BY indexed_at DESC LIMIT 1"
 ```
 
 If the database doesn't exist yet (first handoff), skip this step.

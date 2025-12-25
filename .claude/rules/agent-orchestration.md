@@ -38,7 +38,7 @@ Agents read their own context. Don't read files in main chat just to understand 
 ```
 Implement Phase 4: Outcome Marking Hook from the Artifact Index plan.
 
-**Plan location:** thoughts/shared/plans/2025-12-24-context-graph.md (search for "Phase 4")
+**Plan location:** thoughts/shared/plans/2025-12-24-artifact-index.md (search for "Phase 4")
 
 **What to create:**
 1. TypeScript hook

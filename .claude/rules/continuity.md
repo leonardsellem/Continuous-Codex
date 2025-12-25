@@ -1,13 +1,14 @@
 ---
-globs: ["CONTINUITY_CLAUDE-*.md"]
+globs: ["thoughts/ledgers/CONTINUITY_CLAUDE-*.md"]
 ---
 
 # Continuity Ledger Rules
 
 The ledger is the single source of truth - for session state AND multi-phase implementations.
 
-## File Naming
-- Format: `CONTINUITY_CLAUDE-<session-name>.md`
+## File Location
+- Ledgers live in: `thoughts/ledgers/`
+- Format: `thoughts/ledgers/CONTINUITY_CLAUDE-<session-name>.md`
 - Use kebab-case for session name
 - One ledger per active work stream
 

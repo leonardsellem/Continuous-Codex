@@ -93,7 +93,7 @@ interface UnmarkedHandoff {
 function getUnmarkedHandoffs(): UnmarkedHandoff[] {
   try {
     const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-    const dbPath = path.join(projectDir, '.claude', 'cache', 'context-graph', 'context.db');
+    const dbPath = path.join(projectDir, '.claude', 'cache', 'artifact-index', 'context.db');
 
     if (!fs.existsSync(dbPath)) {
       return [];
@@ -125,11 +125,12 @@ async function main() {
   const sessionType = input.source || input.type;
 
   // Find existing ledgers, sorted by modification time
-  const ledgerFiles = fs.readdirSync(projectDir)
+  const ledgerDir = path.join(projectDir, 'thoughts', 'ledgers');
+  const ledgerFiles = fs.readdirSync(ledgerDir)
     .filter(f => f.startsWith('CONTINUITY_CLAUDE-') && f.endsWith('.md'))
     .sort((a, b) => {
-      const statA = fs.statSync(path.join(projectDir, a));
-      const statB = fs.statSync(path.join(projectDir, b));
+      const statA = fs.statSync(path.join(ledgerDir, a));
+      const statB = fs.statSync(path.join(ledgerDir, b));
       return statB.mtime.getTime() - statA.mtime.getTime();
     });
 
@@ -138,7 +139,7 @@ async function main() {
 
   if (ledgerFiles.length > 0) {
     const mostRecent = ledgerFiles[0];
-    const ledgerPath = path.join(projectDir, mostRecent);
+    const ledgerPath = path.join(ledgerDir, mostRecent);
     const ledgerContent = fs.readFileSync(ledgerPath, 'utf-8');
 
     // Extract key sections for summary

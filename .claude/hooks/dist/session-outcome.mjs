@@ -15,17 +15,24 @@ async function main() {
     console.log(JSON.stringify({ result: "continue" }));
     return;
   }
-  const dbPath = path.join(projectDir, ".claude", "cache", "context-graph", "context.db");
+  const dbPath = path.join(projectDir, ".claude", "cache", "artifact-index", "context.db");
   const dbExists = fs.existsSync(dbPath);
   if (!dbExists) {
     console.log(JSON.stringify({ result: "continue" }));
     return;
   }
-  const ledgerFiles = fs.readdirSync(projectDir).filter((f) => f.startsWith("CONTINUITY_CLAUDE-") && f.endsWith(".md")).sort((a, b) => {
-    const statA = fs.statSync(path.join(projectDir, a));
-    const statB = fs.statSync(path.join(projectDir, b));
-    return statB.mtime.getTime() - statA.mtime.getTime();
-  });
+  const ledgerDir = path.join(projectDir, "thoughts", "ledgers");
+  let ledgerFiles;
+  try {
+    ledgerFiles = fs.readdirSync(ledgerDir).filter((f) => f.startsWith("CONTINUITY_CLAUDE-") && f.endsWith(".md")).sort((a, b) => {
+      const statA = fs.statSync(path.join(ledgerDir, a));
+      const statB = fs.statSync(path.join(ledgerDir, b));
+      return statB.mtime.getTime() - statA.mtime.getTime();
+    });
+  } catch {
+    console.log(JSON.stringify({ result: "continue" }));
+    return;
+  }
   if (ledgerFiles.length === 0) {
     console.log(JSON.stringify({ result: "continue" }));
     return;
@@ -36,36 +43,33 @@ async function main() {
     console.log(JSON.stringify({ result: "continue" }));
     return;
   }
-  const handoffFiles = fs.readdirSync(handoffDir).filter((f) => f.startsWith("task-") && f.endsWith(".md")).sort((a, b) => {
-    const statA = fs.statSync(path.join(handoffDir, a));
-    const statB = fs.statSync(path.join(handoffDir, b));
-    return statB.mtime.getTime() - statA.mtime.getTime();
+  const handoffFiles = fs.readdirSync(handoffDir).filter((f) => f.endsWith(".md") && /^\d{4}-\d{2}-\d{2}_/.test(f)).sort((a, b) => {
+    return b.localeCompare(a);
   });
   if (handoffFiles.length === 0) {
     console.log(JSON.stringify({ result: "continue" }));
     return;
   }
   const latestHandoff = handoffFiles[0];
-  const taskMatch = latestHandoff.match(/task-(\d+)/);
-  const taskNumber = taskMatch ? taskMatch[1] : "??";
+  const handoffName = latestHandoff.replace(".md", "");
   const output = {
     result: "continue",
     message: `
 
 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
 Session ended: ${sessionName}
-Latest handoff: task-${taskNumber}
+Latest handoff: ${handoffName}
 
 To mark outcome and improve future sessions:
 
-  uv run python scripts/context_graph_mark.py \\
+  uv run python scripts/artifact_mark.py \\
     --handoff <handoff-id> \\
     --outcome SUCCEEDED|PARTIAL_PLUS|PARTIAL_MINUS|FAILED
 
 To find handoff ID, query the database:
 
-  sqlite3 .claude/cache/context-graph/context.db \\
-    "SELECT id, session_name, task_number, task_summary FROM handoffs WHERE session_name='${sessionName}' ORDER BY indexed_at DESC LIMIT 1"
+  sqlite3 .claude/cache/artifact-index/context.db \\
+    "SELECT id, file_path FROM handoffs WHERE session_name='${sessionName}' ORDER BY indexed_at DESC LIMIT 1"
 
 Outcome meanings:
   SUCCEEDED      - Task completed successfully

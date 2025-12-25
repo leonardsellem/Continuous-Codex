@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-USAGE: context_graph_query.py <query> [--type TYPE] [--outcome OUTCOME] [--limit N] [--db PATH]
+USAGE: artifact_query.py <query> [--type TYPE] [--outcome OUTCOME] [--limit N] [--db PATH]
 
 Search the Context Graph for relevant precedent.
 
 Examples:
     # Search for authentication-related work
-    uv run python scripts/context_graph_query.py "authentication OAuth JWT"
+    uv run python scripts/artifact_query.py "authentication OAuth JWT"
 
     # Search only successful handoffs
-    uv run python scripts/context_graph_query.py "implement agent" --outcome SUCCEEDED
+    uv run python scripts/artifact_query.py "implement agent" --outcome SUCCEEDED
 
     # Search plans only
-    uv run python scripts/context_graph_query.py "API design" --type plans
+    uv run python scripts/artifact_query.py "API design" --type plans
 """
 
 import argparse
@@ -27,7 +27,7 @@ import hashlib
 def get_db_path(custom_path: Optional[str] = None) -> Path:
     if custom_path:
         return Path(custom_path)
-    return Path(".claude/cache/context-graph/context.db")
+    return Path(".claude/cache/artifact-index/context.db")
 
 
 def escape_fts5_query(query: str) -> str:
@@ -316,7 +316,7 @@ def main():
     db_path = get_db_path(args.db)
     if not db_path.exists():
         print(f"Database not found: {db_path}")
-        print("Run: uv run python scripts/context_graph_index.py --all")
+        print("Run: uv run python scripts/artifact_index.py --all")
         return
 
     conn = sqlite3.connect(db_path)

@@ -19,7 +19,8 @@ async function main() {
   const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 
   // Find existing ledger files
-  const ledgerFiles = fs.readdirSync(projectDir)
+  const ledgerDir = path.join(projectDir, 'thoughts', 'ledgers');
+  const ledgerFiles = fs.readdirSync(ledgerDir)
     .filter(f => f.startsWith('CONTINUITY_CLAUDE-') && f.endsWith('.md'));
 
   if (ledgerFiles.length === 0) {
@@ -34,12 +35,12 @@ async function main() {
 
   // Get most recent ledger
   const mostRecent = ledgerFiles.sort((a, b) => {
-    const statA = fs.statSync(path.join(projectDir, a));
-    const statB = fs.statSync(path.join(projectDir, b));
+    const statA = fs.statSync(path.join(ledgerDir, a));
+    const statB = fs.statSync(path.join(ledgerDir, b));
     return statB.mtime.getTime() - statA.mtime.getTime();
   })[0];
 
-  const ledgerPath = path.join(projectDir, mostRecent);
+  const ledgerPath = path.join(ledgerDir, mostRecent);
 
   if (input.trigger === 'auto') {
     // Auto-compact: Use transcript parser to generate full handoff

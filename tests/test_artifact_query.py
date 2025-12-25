@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Tests for context_graph_query.py - Context Graph query functionality.
+Tests for artifact_query.py - Context Graph query functionality.
 
 TDD: Tests written before implementation.
 """
@@ -26,7 +26,7 @@ class TestQueryFunctions(TestCase):
         cls.conn = sqlite3.connect(":memory:")
 
         # Load schema
-        schema_path = Path(__file__).parent.parent / "scripts" / "context_graph_schema.sql"
+        schema_path = Path(__file__).parent.parent / "scripts" / "artifact_schema.sql"
         cls.conn.executescript(schema_path.read_text())
 
         # Insert test handoffs
@@ -126,7 +126,7 @@ class TestQueryFunctions(TestCase):
 
     def test_import_query_functions(self):
         """Test that query functions can be imported."""
-        from context_graph_query import (
+        from artifact_query import (
             search_handoffs, search_plans, search_continuity,
             search_past_queries, format_results, save_query
         )
@@ -139,14 +139,14 @@ class TestQueryFunctions(TestCase):
 
     def test_search_handoffs_basic(self):
         """Test basic handoff search returns results."""
-        from context_graph_query import search_handoffs
+        from artifact_query import search_handoffs
         results = search_handoffs(self.conn, "authentication OAuth")
         self.assertGreater(len(results), 0)
         self.assertEqual(results[0]["id"], "handoff001")
 
     def test_search_handoffs_by_outcome(self):
         """Test filtering handoffs by outcome."""
-        from context_graph_query import search_handoffs
+        from artifact_query import search_handoffs
         succeeded = search_handoffs(self.conn, "authentication", outcome="SUCCEEDED")
         self.assertEqual(len(succeeded), 1)
         self.assertEqual(succeeded[0]["outcome"], "SUCCEEDED")
@@ -157,7 +157,7 @@ class TestQueryFunctions(TestCase):
 
     def test_search_handoffs_limit(self):
         """Test limit parameter works."""
-        from context_graph_query import search_handoffs
+        from artifact_query import search_handoffs
         # Insert more handoffs with matching terms
         self.conn.execute("""
             INSERT INTO handoffs (id, session_name, task_number, file_path, task_summary,
@@ -177,7 +177,7 @@ class TestQueryFunctions(TestCase):
 
     def test_search_handoffs_returns_all_fields(self):
         """Test that handoff search returns all expected fields."""
-        from context_graph_query import search_handoffs
+        from artifact_query import search_handoffs
         results = search_handoffs(self.conn, "OAuth")
         self.assertGreater(len(results), 0)
         result = results[0]
@@ -190,14 +190,14 @@ class TestQueryFunctions(TestCase):
 
     def test_search_plans_basic(self):
         """Test basic plan search."""
-        from context_graph_query import search_plans
+        from artifact_query import search_plans
         results = search_plans(self.conn, "authentication OAuth")
         self.assertGreater(len(results), 0)
         self.assertEqual(results[0]["id"], "plan001")
 
     def test_search_plans_returns_fields(self):
         """Test plan search returns expected fields."""
-        from context_graph_query import search_plans
+        from artifact_query import search_plans
         results = search_plans(self.conn, "authentication")
         self.assertGreater(len(results), 0)
         result = results[0]
@@ -208,14 +208,14 @@ class TestQueryFunctions(TestCase):
 
     def test_search_continuity_basic(self):
         """Test basic continuity search."""
-        from context_graph_query import search_continuity
+        from artifact_query import search_continuity
         results = search_continuity(self.conn, "authentication JWT")
         self.assertGreater(len(results), 0)
         self.assertEqual(results[0]["id"], "cont001")
 
     def test_search_continuity_returns_fields(self):
         """Test continuity search returns expected fields."""
-        from context_graph_query import search_continuity
+        from artifact_query import search_continuity
         results = search_continuity(self.conn, "authentication")
         self.assertGreater(len(results), 0)
         result = results[0]
@@ -227,14 +227,14 @@ class TestQueryFunctions(TestCase):
 
     def test_search_past_queries(self):
         """Test searching past queries."""
-        from context_graph_query import search_past_queries
+        from artifact_query import search_past_queries
         results = search_past_queries(self.conn, "OAuth implement")
         self.assertGreater(len(results), 0)
         self.assertEqual(results[0]["id"], "query001")
 
     def test_search_past_queries_returns_fields(self):
         """Test past query search returns expected fields."""
-        from context_graph_query import search_past_queries
+        from artifact_query import search_past_queries
         results = search_past_queries(self.conn, "OAuth")
         self.assertGreater(len(results), 0)
         result = results[0]
@@ -245,7 +245,7 @@ class TestQueryFunctions(TestCase):
 
     def test_search_no_results(self):
         """Test search with no matching results."""
-        from context_graph_query import search_handoffs
+        from artifact_query import search_handoffs
         results = search_handoffs(self.conn, "xyz123nonexistent")
         self.assertEqual(len(results), 0)
 
@@ -255,13 +255,13 @@ class TestFormatResults(TestCase):
 
     def test_format_empty_results(self):
         """Test formatting when no results found."""
-        from context_graph_query import format_results
+        from artifact_query import format_results
         output = format_results({})
         self.assertIn("No relevant precedent found", output)
 
     def test_format_handoffs_with_outcome_icons(self):
         """Test handoff formatting includes outcome icons."""
-        from context_graph_query import format_results
+        from artifact_query import format_results
         results = {
             "handoffs": [{
                 "id": "h1",
@@ -280,7 +280,7 @@ class TestFormatResults(TestCase):
 
     def test_format_plans(self):
         """Test plan formatting."""
-        from context_graph_query import format_results
+        from artifact_query import format_results
         results = {
             "plans": [{
                 "id": "p1",
@@ -295,7 +295,7 @@ class TestFormatResults(TestCase):
 
     def test_format_continuity(self):
         """Test continuity formatting."""
-        from context_graph_query import format_results
+        from artifact_query import format_results
         results = {
             "continuity": [{
                 "id": "c1",
@@ -310,7 +310,7 @@ class TestFormatResults(TestCase):
 
     def test_format_past_queries(self):
         """Test past query formatting."""
-        from context_graph_query import format_results
+        from artifact_query import format_results
         results = {
             "past_queries": [{
                 "id": "q1",
@@ -328,7 +328,7 @@ class TestSaveQuery(TestCase):
     def setUp(self):
         """Create test database."""
         self.conn = sqlite3.connect(":memory:")
-        schema_path = Path(__file__).parent.parent / "scripts" / "context_graph_schema.sql"
+        schema_path = Path(__file__).parent.parent / "scripts" / "artifact_schema.sql"
         self.conn.executescript(schema_path.read_text())
 
     def tearDown(self):
@@ -336,7 +336,7 @@ class TestSaveQuery(TestCase):
 
     def test_save_query(self):
         """Test saving a query."""
-        from context_graph_query import save_query
+        from artifact_query import save_query
         matches = {
             "handoffs": [{"id": "h1"}],
             "plans": [{"id": "p1"}],
@@ -351,7 +351,7 @@ class TestSaveQuery(TestCase):
 
     def test_save_query_stores_matches(self):
         """Test that matched IDs are stored as JSON."""
-        from context_graph_query import save_query
+        from artifact_query import save_query
         matches = {
             "handoffs": [{"id": "h1"}, {"id": "h2"}],
             "plans": [{"id": "p1"}],
@@ -374,7 +374,7 @@ class TestCLI(TestCase):
     def test_help(self):
         """Test --help works."""
         result = subprocess.run(
-            [sys.executable, "scripts/context_graph_query.py", "--help"],
+            [sys.executable, "scripts/artifact_query.py", "--help"],
             capture_output=True, text=True, cwd=Path(__file__).parent.parent
         )
         self.assertEqual(result.returncode, 0)
@@ -383,7 +383,7 @@ class TestCLI(TestCase):
     def test_db_not_found(self):
         """Test graceful error when database not found."""
         result = subprocess.run(
-            [sys.executable, "scripts/context_graph_query.py",
+            [sys.executable, "scripts/artifact_query.py",
              "test query", "--db", "/nonexistent/path.db"],
             capture_output=True, text=True, cwd=Path(__file__).parent.parent
         )
@@ -393,12 +393,12 @@ class TestCLI(TestCase):
     def test_json_output(self):
         """Test --json output flag."""
         # First ensure we have a database
-        db_path = Path(__file__).parent.parent / ".claude" / "cache" / "context-graph" / "context.db"
+        db_path = Path(__file__).parent.parent / ".claude" / "cache" / "artifact-index" / "context.db"
         if not db_path.exists():
             self.skipTest("Database not available for CLI test")
 
         result = subprocess.run(
-            [sys.executable, "scripts/context_graph_query.py",
+            [sys.executable, "scripts/artifact_query.py",
              "test", "--json"],
             capture_output=True, text=True, cwd=Path(__file__).parent.parent
         )
@@ -410,12 +410,12 @@ class TestCLI(TestCase):
 
     def test_type_filter(self):
         """Test --type filter."""
-        db_path = Path(__file__).parent.parent / ".claude" / "cache" / "context-graph" / "context.db"
+        db_path = Path(__file__).parent.parent / ".claude" / "cache" / "artifact-index" / "context.db"
         if not db_path.exists():
             self.skipTest("Database not available for CLI test")
 
         result = subprocess.run(
-            [sys.executable, "scripts/context_graph_query.py",
+            [sys.executable, "scripts/artifact_query.py",
              "test", "--type", "handoffs", "--json"],
             capture_output=True, text=True, cwd=Path(__file__).parent.parent
         )
@@ -429,7 +429,7 @@ class TestFTS5Ranking(TestCase):
     def setUpClass(cls):
         """Create test database with documents for ranking tests."""
         cls.conn = sqlite3.connect(":memory:")
-        schema_path = Path(__file__).parent.parent / "scripts" / "context_graph_schema.sql"
+        schema_path = Path(__file__).parent.parent / "scripts" / "artifact_schema.sql"
         cls.conn.executescript(schema_path.read_text())
 
         # Insert documents with varying relevance
@@ -471,7 +471,7 @@ class TestFTS5Ranking(TestCase):
 
     def test_ranking_order(self):
         """Test that more relevant documents rank higher."""
-        from context_graph_query import search_handoffs
+        from artifact_query import search_handoffs
         results = search_handoffs(self.conn, "WebSocket")
 
         self.assertEqual(len(results), 2)

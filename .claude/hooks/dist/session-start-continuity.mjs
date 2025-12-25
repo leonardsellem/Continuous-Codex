@@ -42,7 +42,7 @@ function getLatestHandoff(handoffDir) {
 function getUnmarkedHandoffs() {
   try {
     const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
-    const dbPath = path.join(projectDir, ".claude", "cache", "context-graph", "context.db");
+    const dbPath = path.join(projectDir, ".claude", "cache", "artifact-index", "context.db");
     if (!fs.existsSync(dbPath)) {
       return [];
     }
@@ -65,16 +65,17 @@ async function main() {
   const input = JSON.parse(await readStdin());
   const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
   const sessionType = input.source || input.type;
-  const ledgerFiles = fs.readdirSync(projectDir).filter((f) => f.startsWith("CONTINUITY_CLAUDE-") && f.endsWith(".md")).sort((a, b) => {
-    const statA = fs.statSync(path.join(projectDir, a));
-    const statB = fs.statSync(path.join(projectDir, b));
+  const ledgerDir = path.join(projectDir, "thoughts", "ledgers");
+  const ledgerFiles = fs.readdirSync(ledgerDir).filter((f) => f.startsWith("CONTINUITY_CLAUDE-") && f.endsWith(".md")).sort((a, b) => {
+    const statA = fs.statSync(path.join(ledgerDir, a));
+    const statB = fs.statSync(path.join(ledgerDir, b));
     return statB.mtime.getTime() - statA.mtime.getTime();
   });
   let message = "";
   let additionalContext = "";
   if (ledgerFiles.length > 0) {
     const mostRecent = ledgerFiles[0];
-    const ledgerPath = path.join(projectDir, mostRecent);
+    const ledgerPath = path.join(ledgerDir, mostRecent);
     const ledgerContent = fs.readFileSync(ledgerPath, "utf-8");
     const goalMatch = ledgerContent.match(/## Goal\n([\s\S]*?)(?=\n## |$)/);
     const nowMatch = ledgerContent.match(/- Now: ([^\n]+)/);

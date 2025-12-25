@@ -1,4 +1,4 @@
-"""Tests for context_graph_index.py parsing functions."""
+"""Tests for artifact_index.py parsing functions."""
 
 import json
 import tempfile
@@ -34,7 +34,7 @@ braintrust_session_id: abc123
 
 ## Files Modified
 - `.claude/hooks/skill-activation-prompt.ts:169-196` - Replaced single threshold
-- `scripts/context_graph_index.py` - New file
+- `scripts/artifact_index.py` - New file
 
 ## Patterns/Learnings for Next Tasks
 - The hook shell script requires CLAUDE_PROJECT_DIR
@@ -90,7 +90,7 @@ class TestParseHandoff:
 
     def test_extracts_frontmatter_date(self, tmp_path):
         """Should extract date from frontmatter."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -103,7 +103,7 @@ class TestParseHandoff:
 
     def test_extracts_frontmatter_status(self, tmp_path):
         """Should extract status from frontmatter and map to canonical outcome."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -117,7 +117,7 @@ class TestParseHandoff:
 
     def test_extracts_braintrust_session_id(self, tmp_path):
         """Should extract braintrust_session_id from frontmatter."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -130,7 +130,7 @@ class TestParseHandoff:
 
     def test_extracts_session_name_from_path(self, tmp_path):
         """Should extract session name from file path."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "my-test-session"
         handoff_dir.mkdir(parents=True)
@@ -143,7 +143,7 @@ class TestParseHandoff:
 
     def test_extracts_task_number_from_filename(self, tmp_path):
         """Should extract task number from filename."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -156,7 +156,7 @@ class TestParseHandoff:
 
     def test_extracts_what_was_done_section(self, tmp_path):
         """Should extract what_was_done section as task_summary."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -169,7 +169,7 @@ class TestParseHandoff:
 
     def test_extracts_what_worked_section(self, tmp_path):
         """Should extract what_worked section."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -182,7 +182,7 @@ class TestParseHandoff:
 
     def test_extracts_what_failed_section(self, tmp_path):
         """Should extract what_failed section."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -195,7 +195,7 @@ class TestParseHandoff:
 
     def test_extracts_key_decisions_section(self, tmp_path):
         """Should extract key_decisions section."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -208,7 +208,7 @@ class TestParseHandoff:
 
     def test_extracts_files_modified(self, tmp_path):
         """Should extract files_modified as JSON array."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -219,11 +219,11 @@ class TestParseHandoff:
         files = json.loads(result["files_modified"])
 
         assert ".claude/hooks/skill-activation-prompt.ts" in files
-        assert "scripts/context_graph_index.py" in files
+        assert "scripts/artifact_index.py" in files
 
     def test_generates_unique_id(self, tmp_path):
         """Should generate a unique ID based on file path."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
         handoff_dir.mkdir(parents=True)
@@ -237,7 +237,7 @@ class TestParseHandoff:
 
     def test_handles_missing_sections_gracefully(self, tmp_path):
         """Should handle missing sections with empty strings."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         minimal_handoff = """---
 status: success
@@ -260,7 +260,7 @@ Just a quick fix.
 
     def test_extracts_h3_subsections_under_post_mortem(self, tmp_path):
         """Should extract h3 subsections (What Worked/Failed/Decisions) under Post-Mortem h2."""
-        from scripts.context_graph_index import parse_handoff
+        from scripts.artifact_index import parse_handoff
 
         handoff_with_nested_sections = """---
 status: success
@@ -306,20 +306,20 @@ class TestExtractFiles:
 
     def test_extracts_backtick_file_paths(self):
         """Should extract file paths in backticks."""
-        from scripts.context_graph_index import extract_files
+        from scripts.artifact_index import extract_files
 
         content = """
 - `.claude/hooks/skill-activation-prompt.ts` - Updated
-- `scripts/context_graph_index.py` - New file
+- `scripts/artifact_index.py` - New file
 """
         files = extract_files(content)
 
         assert ".claude/hooks/skill-activation-prompt.ts" in files
-        assert "scripts/context_graph_index.py" in files
+        assert "scripts/artifact_index.py" in files
 
     def test_extracts_file_bold_format(self):
         """Should extract file paths in **File**: format."""
-        from scripts.context_graph_index import extract_files
+        from scripts.artifact_index import extract_files
 
         content = """
 **File**: `path/to/file.py`
@@ -336,7 +336,7 @@ class TestParsePlan:
 
     def test_extracts_title_from_h1(self, tmp_path):
         """Should extract title from first H1."""
-        from scripts.context_graph_index import parse_plan
+        from scripts.artifact_index import parse_plan
 
         plan_file = tmp_path / "plan.md"
         plan_file.write_text(SAMPLE_PLAN)
@@ -347,7 +347,7 @@ class TestParsePlan:
 
     def test_extracts_overview_section(self, tmp_path):
         """Should extract overview section."""
-        from scripts.context_graph_index import parse_plan
+        from scripts.artifact_index import parse_plan
 
         plan_file = tmp_path / "plan.md"
         plan_file.write_text(SAMPLE_PLAN)
@@ -358,7 +358,7 @@ class TestParsePlan:
 
     def test_extracts_approach_section(self, tmp_path):
         """Should extract implementation approach section."""
-        from scripts.context_graph_index import parse_plan
+        from scripts.artifact_index import parse_plan
 
         plan_file = tmp_path / "plan.md"
         plan_file.write_text(SAMPLE_PLAN)
@@ -369,7 +369,7 @@ class TestParsePlan:
 
     def test_extracts_phases_as_json(self, tmp_path):
         """Should extract phases as JSON array."""
-        from scripts.context_graph_index import parse_plan
+        from scripts.artifact_index import parse_plan
 
         plan_file = tmp_path / "plan.md"
         plan_file.write_text(SAMPLE_PLAN)
@@ -382,7 +382,7 @@ class TestParsePlan:
 
     def test_extracts_constraints(self, tmp_path):
         """Should extract what we're not doing as constraints."""
-        from scripts.context_graph_index import parse_plan
+        from scripts.artifact_index import parse_plan
 
         plan_file = tmp_path / "plan.md"
         plan_file.write_text(SAMPLE_PLAN)
@@ -393,7 +393,7 @@ class TestParsePlan:
 
     def test_generates_unique_id(self, tmp_path):
         """Should generate unique ID from file path."""
-        from scripts.context_graph_index import parse_plan
+        from scripts.artifact_index import parse_plan
 
         plan_file = tmp_path / "plan.md"
         plan_file.write_text(SAMPLE_PLAN)
@@ -409,7 +409,7 @@ class TestParseContinuity:
 
     def test_extracts_session_name_from_filename(self, tmp_path):
         """Should extract session name from filename."""
-        from scripts.context_graph_index import parse_continuity
+        from scripts.artifact_index import parse_continuity
 
         ledger_file = tmp_path / "CONTINUITY_CLAUDE-my-session.md"
         ledger_file.write_text(SAMPLE_CONTINUITY)
@@ -420,7 +420,7 @@ class TestParseContinuity:
 
     def test_extracts_goal_section(self, tmp_path):
         """Should extract goal section."""
-        from scripts.context_graph_index import parse_continuity
+        from scripts.artifact_index import parse_continuity
 
         ledger_file = tmp_path / "CONTINUITY_CLAUDE-test.md"
         ledger_file.write_text(SAMPLE_CONTINUITY)
@@ -431,7 +431,7 @@ class TestParseContinuity:
 
     def test_extracts_state_done_as_json(self, tmp_path):
         """Should extract completed state items as JSON array."""
-        from scripts.context_graph_index import parse_continuity
+        from scripts.artifact_index import parse_continuity
 
         ledger_file = tmp_path / "CONTINUITY_CLAUDE-test.md"
         ledger_file.write_text(SAMPLE_CONTINUITY)
@@ -444,7 +444,7 @@ class TestParseContinuity:
 
     def test_extracts_state_now(self, tmp_path):
         """Should extract current state item."""
-        from scripts.context_graph_index import parse_continuity
+        from scripts.artifact_index import parse_continuity
 
         ledger_file = tmp_path / "CONTINUITY_CLAUDE-test.md"
         ledger_file.write_text(SAMPLE_CONTINUITY)
@@ -455,7 +455,7 @@ class TestParseContinuity:
 
     def test_extracts_key_learnings(self, tmp_path):
         """Should extract key learnings section."""
-        from scripts.context_graph_index import parse_continuity
+        from scripts.artifact_index import parse_continuity
 
         ledger_file = tmp_path / "CONTINUITY_CLAUDE-test.md"
         ledger_file.write_text(SAMPLE_CONTINUITY)
@@ -466,7 +466,7 @@ class TestParseContinuity:
 
     def test_extracts_key_decisions(self, tmp_path):
         """Should extract key decisions section."""
-        from scripts.context_graph_index import parse_continuity
+        from scripts.artifact_index import parse_continuity
 
         ledger_file = tmp_path / "CONTINUITY_CLAUDE-test.md"
         ledger_file.write_text(SAMPLE_CONTINUITY)
@@ -481,18 +481,18 @@ class TestGetDbPath:
 
     def test_uses_default_path_when_none_provided(self, tmp_path, monkeypatch):
         """Should use default path when no custom path provided."""
-        from scripts.context_graph_index import get_db_path
+        from scripts.artifact_index import get_db_path
 
         # Change to temp directory
         monkeypatch.chdir(tmp_path)
 
         path = get_db_path()
 
-        assert path == Path(".claude/cache/context-graph/context.db")
+        assert path == Path(".claude/cache/artifact-index/context.db")
 
     def test_uses_custom_path_when_provided(self, tmp_path):
         """Should use custom path when provided."""
-        from scripts.context_graph_index import get_db_path
+        from scripts.artifact_index import get_db_path
 
         custom = tmp_path / "custom" / "db.sqlite"
         path = get_db_path(str(custom))
@@ -501,7 +501,7 @@ class TestGetDbPath:
 
     def test_creates_parent_directories(self, tmp_path):
         """Should create parent directories if they don't exist."""
-        from scripts.context_graph_index import get_db_path
+        from scripts.artifact_index import get_db_path
 
         custom = tmp_path / "deep" / "nested" / "path" / "db.sqlite"
         path = get_db_path(str(custom))
@@ -514,7 +514,7 @@ class TestIndexing:
 
     def test_index_handoffs_counts_files(self, tmp_path):
         """Should return count of indexed handoffs."""
-        from scripts.context_graph_index import get_db_path, init_db, index_handoffs
+        from scripts.artifact_index import get_db_path, init_db, index_handoffs
 
         # Create test handoffs
         handoff_dir = tmp_path / "thoughts" / "handoffs" / "test-session"
@@ -525,7 +525,7 @@ class TestIndexing:
         # Create schema file
         scripts_dir = tmp_path / "scripts"
         scripts_dir.mkdir()
-        schema_file = scripts_dir / "context_graph_schema.sql"
+        schema_file = scripts_dir / "artifact_schema.sql"
         schema_file.write_text(get_minimal_schema())
 
         # Initialize database
@@ -539,7 +539,7 @@ class TestIndexing:
 
     def test_index_plans_counts_files(self, tmp_path):
         """Should return count of indexed plans."""
-        from scripts.context_graph_index import get_db_path, init_db, index_plans
+        from scripts.artifact_index import get_db_path, init_db, index_plans
 
         # Create test plans
         plans_dir = tmp_path / "thoughts" / "shared" / "plans"
@@ -550,7 +550,7 @@ class TestIndexing:
         # Create schema file
         scripts_dir = tmp_path / "scripts"
         scripts_dir.mkdir()
-        schema_file = scripts_dir / "context_graph_schema.sql"
+        schema_file = scripts_dir / "artifact_schema.sql"
         schema_file.write_text(get_minimal_schema())
 
         # Initialize database

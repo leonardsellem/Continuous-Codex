@@ -6,14 +6,15 @@ async function main() {
   const input = JSON.parse(await readStdin());
   const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
   try {
-    const ledgerFiles = fs.readdirSync(projectDir).filter((f) => f.startsWith("CONTINUITY_CLAUDE-") && f.endsWith(".md"));
+    const ledgerDir = path.join(projectDir, "thoughts", "ledgers");
+    const ledgerFiles = fs.readdirSync(ledgerDir).filter((f) => f.startsWith("CONTINUITY_CLAUDE-") && f.endsWith(".md"));
     if (ledgerFiles.length > 0) {
       const mostRecent = ledgerFiles.sort((a, b) => {
-        const statA = fs.statSync(path.join(projectDir, a));
-        const statB = fs.statSync(path.join(projectDir, b));
+        const statA = fs.statSync(path.join(ledgerDir, a));
+        const statB = fs.statSync(path.join(ledgerDir, b));
         return statB.mtime.getTime() - statA.mtime.getTime();
       })[0];
-      const ledgerPath = path.join(projectDir, mostRecent);
+      const ledgerPath = path.join(ledgerDir, mostRecent);
       let content = fs.readFileSync(ledgerPath, "utf-8");
       const timestamp = (/* @__PURE__ */ new Date()).toISOString();
       content = content.replace(
