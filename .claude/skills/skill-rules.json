@@ -445,6 +445,32 @@
                 ]
             }
         },
+        "morph-apply": {
+            "type": "domain",
+            "enforcement": "suggest",
+            "priority": "high",
+            "description": "FAST file editing (10,500 tokens/sec, 98% accuracy) - Edit files without reading them first. Use // ... existing code ... markers.",
+            "promptTriggers": {
+                "keywords": [
+                    "morph apply",
+                    "morph edit",
+                    "fast edit",
+                    "edit file",
+                    "apply edit",
+                    "code edit",
+                    "smart edit",
+                    "apply changes",
+                    "batch edit"
+                ],
+                "intentPatterns": [
+                    "(fast|quick|smart).*?edit",
+                    "(edit|modify).*?(file|code).*?(fast|without reading)",
+                    "(apply|make).*?(edit|change).*?(file|code)",
+                    "morph.*?(edit|apply)",
+                    "batch.*?edit"
+                ]
+            }
+        },
         "perplexity-search": {
             "type": "domain",
             "enforcement": "suggest",

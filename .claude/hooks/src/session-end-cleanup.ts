@@ -80,7 +80,15 @@ async function main() {
     if (fs.existsSync(scriptPath)) {
       // Use spawn with detached mode so process survives hook exit
       // Pass the ending session's ID explicitly (new session may already be active in Braintrust)
-      const child = spawn('uv', ['run', 'python', scriptPath, '--learn', '--session-id', input.session_id], {
+
+      // For global script, use --with to include deps (works in any project without pyproject.toml)
+      // For project script, use regular uv run (project has its own deps)
+      const isGlobalScript = scriptPath === globalScript;
+      const args = isGlobalScript
+        ? ['run', '--with', 'braintrust', '--with', 'openai', '--with', 'aiohttp', 'python', scriptPath, '--learn', '--session-id', input.session_id]
+        : ['run', 'python', scriptPath, '--learn', '--session-id', input.session_id];
+
+      const child = spawn('uv', args, {
         cwd: projectDir,
         detached: true,
         stdio: 'ignore'

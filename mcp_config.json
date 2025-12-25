@@ -33,8 +33,7 @@
       "args": ["-y", "@morphllm/morphmcp"],
       "env": {
         "MORPH_API_KEY": "${MORPH_API_KEY}"
-      },
-      "disabled": true
+      }
     },
     "perplexity": {
       "type": "stdio",

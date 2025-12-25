@@ -8,6 +8,8 @@ an explicit state machine pattern for clarity and debugging.
 import asyncio
 import json
 import logging
+import os
+import re
 import sys
 from enum import Enum
 from functools import lru_cache
@@ -241,13 +243,30 @@ class McpClientManager:
                 del self._stdio_contexts[server_name]
             raise ServerConnectionError(f"Could not connect to MCP server '{server_name}': {e}")
 
+    def _substitute_env_vars(self, env: dict[str, str] | None) -> dict[str, str] | None:
+        """Substitute ${VAR} placeholders with actual environment variable values."""
+        if not env:
+            return env
+        result = {}
+        pattern = re.compile(r'\$\{([^}]+)\}')
+        for key, value in env.items():
+            # Replace ${VAR} with os.environ.get('VAR', '')
+            def replacer(match: re.Match) -> str:
+                var_name = match.group(1)
+                return os.environ.get(var_name, '')
+            result[key] = pattern.sub(replacer, value)
+        return result
+
     async def _connect_stdio(self, server_name: str, config: ServerConfig) -> None:
         """Connect to stdio MCP server."""
+        # Substitute environment variable placeholders
+        resolved_env = self._substitute_env_vars(config.env)
+
         # Create stdio server parameters
         server_params = StdioServerParameters(
             command=config.command,
             args=config.args,
-            env=config.env,
+            env=resolved_env,
         )
 
         # Establish stdio connection and store the context manager

@@ -63,6 +63,16 @@ echo ""
 echo "Installing Continuous Claude to $GLOBAL_DIR..."
 echo ""
 
+# Install uv if not present (required for learnings hook)
+if ! command -v uv &> /dev/null; then
+    echo "Installing uv (Python package manager)..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    # Add to PATH for this session
+    export PATH="$HOME/.local/bin:$PATH"
+    echo "✓ uv installed"
+    echo ""
+fi
+
 # Create global dir if needed
 mkdir -p "$GLOBAL_DIR"
 

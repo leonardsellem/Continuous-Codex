@@ -72,6 +72,28 @@ Follow the Red-Green-Refactor cycle for each piece of functionality:
 - Use real code, minimize mocks
 - Hard to test = design problem - simplify the interface
 
+#### 2f. Choose Your Editing Tool
+
+For implementing code changes, choose based on file size and context:
+
+| Tool | Best For | Speed |
+|------|----------|-------|
+| **morph-apply** | Large files (>500 lines), batch edits, files not yet in context | 10,500 tokens/sec |
+| **Claude Edit** | Small files already read, precise single edits | Standard |
+
+**Using morph-apply (recommended for large files):**
+```bash
+# Fast edit without reading file first
+uv run python -m runtime.harness scripts/morph_apply.py \
+    --file "src/auth.ts" \
+    --instruction "I will add null check for user" \
+    --code_edit "// ... existing code ...
+if (!user) throw new Error('User not found');
+// ... existing code ..."
+```
+
+**Key pattern:** Use `// ... existing code ...` markers to show where your changes go. Morph intelligently merges at 98% accuracy.
+
 **Implementation Guidelines:**
 - Follow existing patterns in the codebase
 - Keep changes focused on your task

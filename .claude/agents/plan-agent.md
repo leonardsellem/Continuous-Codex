@@ -59,6 +59,12 @@ rp-cli -e 'search "pattern" --max-results 20'  # Find related code
 
 # Fast code search (Morph/WarpGrep)
 uv run python -m runtime.harness scripts/morph_search.py --query "existing implementation" --path "."
+
+# Fast code edits (Morph/Apply) - for implementation agents
+uv run python -m runtime.harness scripts/morph_apply.py \
+    --file "path/to/file.py" \
+    --instruction "Description of change" \
+    --code_edit "// ... existing code ...\nnew_code\n// ... existing code ..."
 ```
 
 ## Step 4: Write Output

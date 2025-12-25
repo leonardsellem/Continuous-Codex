@@ -56,7 +56,9 @@ async function main() {
     const globalScript = path.join(process.env.HOME || "", ".claude", "scripts", "braintrust_analyze.py");
     const scriptPath = fs.existsSync(learnScript) ? learnScript : globalScript;
     if (fs.existsSync(scriptPath)) {
-      const child = spawn("uv", ["run", "python", scriptPath, "--learn", "--session-id", input.session_id], {
+      const isGlobalScript = scriptPath === globalScript;
+      const args = isGlobalScript ? ["run", "--with", "braintrust", "--with", "openai", "--with", "aiohttp", "python", scriptPath, "--learn", "--session-id", input.session_id] : ["run", "python", scriptPath, "--learn", "--session-id", input.session_id];
+      const child = spawn("uv", args, {
         cwd: projectDir,
         detached: true,
         stdio: "ignore"

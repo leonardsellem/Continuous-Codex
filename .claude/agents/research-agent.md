@@ -64,6 +64,12 @@ rp-cli -e 'read file.ts --start-line 50 --limit 30'  # Slices
 
 # Fast code search (Morph/WarpGrep)
 uv run python -m runtime.harness scripts/morph_search.py --query "pattern" --path "."
+
+# Fast code edits (Morph/Apply) - apply changes based on research
+uv run python -m runtime.harness scripts/morph_apply.py \
+    --file "path/to/file.py" \
+    --instruction "Description of change" \
+    --code_edit "// ... existing code ...\nnew_code\n// ... existing code ..."
 ```
 
 ## Step 4: Write Output
