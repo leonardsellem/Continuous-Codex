@@ -51,8 +51,8 @@ async function main() {
       const summary = parseTranscript(input.transcript_path);
       const handoffContent = generateAutoHandoff(summary, sessionName);
 
-      // Ensure handoff directory exists
-      const handoffDir = path.join(projectDir, 'thoughts', 'handoffs', sessionName);
+      // Ensure handoff directory exists (thoughts/shared/handoffs is tracked in git)
+      const handoffDir = path.join(projectDir, 'thoughts', 'shared', 'handoffs', sessionName);
       fs.mkdirSync(handoffDir, { recursive: true });
 
       // Write handoff with timestamp
@@ -75,7 +75,7 @@ async function main() {
     }
 
     const message = handoffFile
-      ? `[PreCompact:auto] Created ${handoffFile} in thoughts/handoffs/${sessionName}/`
+      ? `[PreCompact:auto] Created ${handoffFile} in thoughts/shared/handoffs/${sessionName}/`
       : `[PreCompact:auto] Session summary auto-appended to ${mostRecent}`;
 
     const output: HookOutput = {

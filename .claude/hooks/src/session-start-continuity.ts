@@ -156,7 +156,7 @@ async function main() {
     const sessionName = mostRecent.replace('CONTINUITY_CLAUDE-', '').replace('.md', '');
 
     // Check for handoff directory
-    const handoffDir = path.join(projectDir, 'thoughts', 'handoffs', sessionName);
+    const handoffDir = path.join(projectDir, 'thoughts', 'shared', 'handoffs', sessionName);
     const latestHandoff = getLatestHandoff(handoffDir);
 
     if (sessionType === 'startup') {

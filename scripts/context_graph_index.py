@@ -12,7 +12,7 @@ Examples:
     uv run python scripts/context_graph_index.py --all
 
     # Index a single handoff file (fast, for hooks)
-    uv run python scripts/context_graph_index.py --file thoughts/handoffs/session/task-01.md
+    uv run python scripts/context_graph_index.py --file thoughts/shared/handoffs/session/task-01.md
 
     # Use custom database path
     uv run python scripts/context_graph_index.py --all --db /path/to/context.db
@@ -169,7 +169,7 @@ def extract_files(content: str) -> list:
     return files
 
 
-def index_handoffs(conn: sqlite3.Connection, base_path: Path = Path("thoughts/handoffs")):
+def index_handoffs(conn: sqlite3.Connection, base_path: Path = Path("thoughts/shared/handoffs")):
     """Index all handoffs into the database."""
     if not base_path.exists():
         print(f"Handoffs directory not found: {base_path}")

@@ -81,7 +81,7 @@ async function main() {
     const goalSummary = goalMatch ? goalMatch[1].trim().split("\n")[0].substring(0, 100) : "No goal found";
     const currentFocus = nowMatch ? nowMatch[1].trim() : "Unknown";
     const sessionName = mostRecent.replace("CONTINUITY_CLAUDE-", "").replace(".md", "");
-    const handoffDir = path.join(projectDir, "thoughts", "handoffs", sessionName);
+    const handoffDir = path.join(projectDir, "thoughts", "shared", "handoffs", sessionName);
     const latestHandoff = getLatestHandoff(handoffDir);
     if (sessionType === "startup") {
       let startupMsg = `\u{1F4CB} Ledger available: ${sessionName} \u2192 ${currentFocus}`;

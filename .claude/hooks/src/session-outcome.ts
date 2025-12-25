@@ -58,8 +58,8 @@ async function main() {
     .replace('CONTINUITY_CLAUDE-', '')
     .replace('.md', '');
 
-  // Check for handoffs in this session
-  const handoffDir = path.join(projectDir, 'thoughts', 'handoffs', sessionName);
+  // Check for handoffs in this session (thoughts/shared/handoffs is tracked in git)
+  const handoffDir = path.join(projectDir, 'thoughts', 'shared', 'handoffs', sessionName);
   if (!fs.existsSync(handoffDir)) {
     console.log(JSON.stringify({ result: "continue" }));
     return;

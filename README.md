@@ -409,6 +409,8 @@ vim src/session-start-continuity.ts  # Edit source
 ./build.sh                            # Rebuild dist/
 ```
 
+**Note on latency:** Some hooks (especially `SessionEnd` and `Stop`) may add 1-3 seconds of latency as they finalize traces and extract learnings. This is expected - the hooks run fire-and-forget processes that don't block the next session.
+
 Hooks receive JSON input and return JSON output:
 
 ```typescript

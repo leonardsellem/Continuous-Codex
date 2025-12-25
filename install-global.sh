@@ -4,15 +4,21 @@
 #
 # Usage: ./install-global.sh
 #
-# What gets installed:
-#   ~/.claude/skills/     - All skills
-#   ~/.claude/agents/     - Agent configurations
-#   ~/.claude/rules/      - Behavioral rules
-#   ~/.claude/hooks/      - Session lifecycle hooks
-#   ~/.claude/scripts/    - MCP workflow scripts
-#   ~/.claude/settings.json - Hook registrations (merged)
+# ⚠️  WARNING: This script REPLACES the following directories:
+#   ~/.claude/skills/     - Replaced entirely
+#   ~/.claude/agents/     - Replaced entirely
+#   ~/.claude/rules/      - Replaced entirely
+#   ~/.claude/hooks/      - Replaced entirely
+#   ~/.claude/scripts/    - Files added/overwritten
+#   ~/.claude/settings.json - Replaced (backup created)
 #
-# Safe to run multiple times - existing files are backed up.
+# ✓ Preserved:
+#   ~/.claude/.env        - Not touched if exists
+#   ~/.claude/cache/      - Not touched
+#   ~/.claude/state/      - Not touched
+#
+# Safe to run multiple times - settings.json is backed up before overwrite.
+# If you have custom skills/agents/rules, copy them to a safe location first.
 
 set -e
 

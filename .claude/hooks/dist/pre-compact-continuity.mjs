@@ -231,7 +231,7 @@ async function main() {
     if (input.transcript_path && fs2.existsSync(input.transcript_path)) {
       const summary = parseTranscript(input.transcript_path);
       const handoffContent = generateAutoHandoff(summary, sessionName);
-      const handoffDir = path.join(projectDir, "thoughts", "handoffs", sessionName);
+      const handoffDir = path.join(projectDir, "thoughts", "shared", "handoffs", sessionName);
       fs2.mkdirSync(handoffDir, { recursive: true });
       const timestamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-").slice(0, 19);
       handoffFile = `auto-handoff-${timestamp}.md`;
@@ -247,7 +247,7 @@ async function main() {
         appendToLedger(ledgerPath, briefSummary);
       }
     }
-    const message = handoffFile ? `[PreCompact:auto] Created ${handoffFile} in thoughts/handoffs/${sessionName}/` : `[PreCompact:auto] Session summary auto-appended to ${mostRecent}`;
+    const message = handoffFile ? `[PreCompact:auto] Created ${handoffFile} in thoughts/shared/handoffs/${sessionName}/` : `[PreCompact:auto] Session summary auto-appended to ${mostRecent}`;
     const output = {
       result: "continue",
       message

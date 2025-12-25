@@ -31,7 +31,7 @@ async function main() {
     return;
   }
   const sessionName = ledgerFiles[0].replace("CONTINUITY_CLAUDE-", "").replace(".md", "");
-  const handoffDir = path.join(projectDir, "thoughts", "handoffs", sessionName);
+  const handoffDir = path.join(projectDir, "thoughts", "shared", "handoffs", sessionName);
   if (!fs.existsSync(handoffDir)) {
     console.log(JSON.stringify({ result: "continue" }));
     return;
